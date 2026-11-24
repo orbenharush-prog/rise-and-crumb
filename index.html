@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  PRACTICE WEBSITE: "Rise & Crumb Bakery" (a made-up business)
+  ============================================================
+  This whole site is ONE file. It has three parts:
+    1. HTML  = the structure (headings, paragraphs, sections)
+    2. CSS   = the look (colors, fonts, layout) inside <style>
+    3. JS    = the behavior (menu tabs, contact form) inside <script>
+
+  Most small-business sites have the same sections:
+    Header/nav -> Hero -> About -> Menu/Services -> Hours & Location
+    -> Contact -> Footer
+  Learn this pattern and you can build sites for almost any local shop.
+-->
+<html lang="en">
+<head>
+  <!-- "meta charset" lets the page show any character (é, ñ, emoji). -->
+  <meta charset="UTF-8">
+  <!-- This line makes the site fit phone screens. ALWAYS include it. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The text shown in the browser tab and in Google results. -->
+  <title>Rise &amp; Crumb Bakery</title>
+  <!-- The description Google shows under your link. Great for local SEO. -->
+  <meta name="description" content="Fresh bread, pastries and custom cakes baked daily on Main Street.">
+
+  <!-- Free fonts from Google Fonts. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+/*
+  VOICE: warm, friendly neighborhood shop
+  IDEA: the bakery's front window, with an awning over fresh loaves
+  PICTURE: an SVG storefront with a striped awning and bread on shelves
+  COLOUR and TYPE: strawberry-frosting pink, chocolate brown, golden crust; Fraunces + Nunito Sans
+  LAYOUT: nav, hero scene, about, tabbed menu, hours/map, contact form, footer
+*/
+
+/* ---------- CSS VARIABLES ----------
+   Store your colors once here, then reuse them everywhere with var(--name).
+   Want to rebrand for a different client? Change these few lines.
+   light-dark(lightValue, darkValue) gives the site a dark mode for free. */
+:root{
+  color-scheme: light dark;
+  --bg:     light-dark(#fff7f5, #22140f);
+  --pink:   light-dark(#f7c6cc, #5a2a33);
+  --choc:   light-dark(#3b2016, #f6e6df);   /* main text color */
+  --crust:  light-dark(#d98a2b, #f0a94a);   /* accent color */
+  --card:   light-dark(#ffffff, #2e1c15);
+  --line:   light-dark(#ecd6d0, #4a3128);
+  --soft:   light-dark(#6e5249, #cbb3a9);   /* softer text */
+}
+:root[data-theme=light]{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark}
+
+/* box-sizing:border-box makes widths include padding. Saves headaches. */
+*{box-sizing:border-box;min-width:0}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--choc);
+  font:17px/1.6 "Nunito Sans", system-ui, sans-serif;
+  overflow-x:clip;
+}
+h1,h2,h3{font-family:"Fraunces", Georgia, serif;line-height:1.05;margin:0 0 .4em;text-wrap:balance}
+h1{font-size:clamp(36px,6vw,54px);font-weight:800}
+h2{font-size:clamp(30px,4vw,40px)}
+h3{font-size:21px}
+p{margin:0 0 1em;max-width:62ch}
+a{color:inherit}
+
+/* A "band" is a full-width section. clamp() = min, preferred, max size. */
+.band{padding:clamp(40px,6vw,80px) max(5vw,16px)}
+.wrap{max-width:1180px;margin:0 auto}
+
+/* ---------- HEADER / NAV ----------
+   position:sticky keeps the nav on screen while scrolling. */
+header{
+  position:sticky;top:0;z-index:10;
+  background:var(--bg);
+  border-bottom:1px solid var(--line);
+}
+.nav{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 24px;padding:12px max(5vw,16px);max-width:1280px;margin:0 auto}
+.logo{font-family:Fraunces,serif;font-weight:800;font-size:22px;text-decoration:none}
+.logo span{color:var(--crust)}
+.nav ul{list-style:none;display:flex;flex-wrap:wrap;gap:4px 18px;margin:0;padding:0}
+.nav ul a{text-decoration:none;font-weight:700;padding:10px 2px;display:inline-block}
+.nav ul a:hover{color:var(--crust)}
+
+/* Buttons. min-height 44px = easy to tap with a thumb. */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:48px;padding:0 24px;border-radius:999px;border:0;
+  background:var(--choc);color:var(--bg);
+  font:700 16px "Nunito Sans",sans-serif;text-decoration:none;cursor:pointer;
+}
+.btn.alt{background:transparent;color:var(--choc);box-shadow:inset 0 0 0 2px var(--choc)}
+.btn:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,[role=tab]:focus-visible{outline:3px solid var(--crust);outline-offset:3px}
+
+/* ---------- HERO ----------
+   CSS Grid makes two columns on big screens. On phones it becomes one. */
+.hero{background:var(--pink)}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(24px,4vw,56px);align-items:center}
+.hero p{font-size:19px}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}
+.scene{width:100%;height:auto;display:block}
+
+/* ---------- ABOUT ---------- */
+.about .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px}
+.facts{display:grid;gap:14px;align-content:start}
+.fact{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.fact b{display:block;font-family:Fraunces,serif;font-size:21px}
+
+/* ---------- MENU ---------- */
+.menu{background:var(--card);border-block:1px solid var(--line)}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 24px}
+.tabs button{
+  min-height:44px;padding:0 18px;border-radius:999px;cursor:pointer;
+  border:2px solid var(--choc);background:transparent;color:var(--choc);
+  font:700 15px "Nunito Sans",sans-serif;
+}
+.tabs button[aria-selected=true]{background:var(--choc);color:var(--bg)}
+.items{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:4px 40px;list-style:none;margin:0;padding:0}
+.items li{display:flex;gap:12px;align-items:baseline;padding:14px 0;border-bottom:1px dashed var(--line)}
+.items .name{font-weight:700}
+.items .desc{display:block;color:var(--soft);font-size:15px}
+.items .price{margin-left:auto;white-space:nowrap;font-weight:700;color:var(--crust)}
+.note{font-size:14px;color:var(--soft)}
+
+/* ---------- HOURS & LOCATION ---------- */
+.visit .wrap{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px}
+table{width:100%;border-collapse:collapse}
+td{padding:10px 0;border-bottom:1px solid var(--line)}
+td:last-child{text-align:right;white-space:nowrap}
+tr.today td{font-weight:700;color:var(--crust)}
+.status{display:inline-block;margin-bottom:14px;padding:6px 14px;border-radius:999px;background:var(--pink);font-weight:700}
+.mapbox{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}
+.mapbox svg{width:100%;height:auto;display:block;border-radius:12px}
+
+/* ---------- CONTACT FORM ---------- */
+.contact{background:var(--pink)}
+form{display:grid;gap:16px;max-width:560px}
+label{font-weight:700;display:grid;gap:6px}
+input,textarea,select{
+  font:16px "Nunito Sans",sans-serif;   /* 16px stops iPhones zooming in */
+  padding:12px 14px;border-radius:12px;border:2px solid var(--line);
+  background:var(--card);color:var(--choc);width:100%;
+}
+textarea{min-height:120px;resize:vertical}
+.thanks{display:none;background:var(--card);border-radius:16px;padding:20px;max-width:560px}
+.thanks.show{display:block}
+
+footer{padding:32px max(5vw,16px);text-align:center;font-size:15px;color:var(--soft)}
+
+/* ---------- RESPONSIVE ----------
+   A "media query" changes the layout when the screen is narrow (phones). */
+@media (max-width:760px){
+  .hero .wrap,.about .wrap,.visit .wrap{grid-template-columns:1fr}
+}
+/* Gentle steam animation, turned off for people who prefer less motion. */
+.steam{animation:rise 3s ease-in-out infinite}
+.steam:nth-of-type(2){animation-delay:1s}
+@keyframes rise{0%{opacity:0;transform:translateY(6px)}50%{opacity:.8}100%{opacity:0;transform:translateY(-10px)}}
+@media (prefers-reduced-motion:reduce){.steam{animation:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER: logo + links that jump to each section (#id) ===== -->
+<header>
+  <nav class="nav" aria-label="Main">
+    <a class="logo" href="#top">Rise <span>&amp;</span> Crumb</a>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#visit">Hours</a></li>
+      <li><a href="#contact">Order a cake</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="top">
+
+<!-- ===== HERO: the first thing visitors see. Say WHAT you are and WHERE. ===== -->
+<section class="hero band">
+  <div class="wrap">
+    <div>
+      <h1>Fresh bread and pastries, baked every morning on Main Street</h1>
+      <p>Sourdough, cinnamon rolls and custom cakes, made by hand in our little shop since 2019.</p>
+      <!-- The two most important actions a customer wants to take. -->
+      <div class="actions">
+        <a class="btn" href="#menu">See the menu</a>
+        <a class="btn alt" href="#visit">Hours &amp; directions</a>
+      </div>
+    </div>
+
+    <!-- The picture is drawn with SVG (shapes written in code), so no image files are needed.
+         On a real client site, you'd usually use real photos of their shop and food. -->
+    <svg class="scene" viewBox="0 0 520 400" role="img" aria-label="Illustration of the bakery storefront with loaves in the window">
+      <defs>
+        <linearGradient id="wall" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#fffaf3"/><stop offset="1" stop-color="#f3e2d3"/></linearGradient>
+        <linearGradient id="glass" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#fdeecf"/><stop offset="1" stop-color="#f6cf96"/></linearGradient>
+        <linearGradient id="loaf" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#e9a64c"/><stop offset="1" stop-color="#a95f1f"/></linearGradient>
+        <!-- <symbol> lets us draw a loaf once and reuse it with <use>. -->
+        <symbol id="bread" viewBox="0 0 80 44">
+          <ellipse cx="40" cy="40" rx="36" ry="4" fill="#000" opacity=".15"/>
+          <path d="M4 36 C4 10 76 10 76 36 Z" fill="url(#loaf)"/>
+          <path d="M22 20 l8 10 M38 16 l8 12 M54 20 l8 10" stroke="#fbe0b0" stroke-width="3" stroke-linecap="round"/>
+        </symbol>
+      </defs>
+      <!-- ground shadow -->
+      <ellipse cx="260" cy="388" rx="240" ry="10" fill="#3b2016" opacity=".18"/>
+      <!-- building -->
+      <rect x="40" y="70" width="440" height="316" rx="6" fill="url(#wall)"/>
+      <rect x="40" y="70" width="440" height="10" fill="#3b2016" opacity=".12"/>
+      <!-- sign -->
+      <rect x="150" y="22" width="220" height="56" rx="12" fill="#3b2016"/>
+      <text x="260" y="58" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="800" font-size="26" fill="#fff7f5">Rise &amp; Crumb</text>
+      <!-- striped awning -->
+      <g>
+        <path d="M30 96 H490 L470 150 H50 Z" fill="#fff"/>
+        <path d="M30 96 H80 L74 150 H50 Z M130 96 H180 L178 150 H126 Z M230 96 H290 L290 150 H230 Z M340 96 H390 L394 150 H342 Z M440 96 H490 L470 150 H446 Z" fill="#e7768a"/>
+        <path d="M50 150 q13 14 26 0 q13 14 26 0 q13 14 26 0 q13 14 26 0 q13 14 26 0 q13 14 26 0 q13 14 26 0 q13 14 26 0 q13 14 26 0 q13 14 26 0 q13 14 26 0 q13 14 26 0 q13 14 26 0 q13 14 26 0 q13 14 26 0 q13 14 26 0" fill="#e7768a"/>
+      </g>
+      <!-- window -->
+      <rect x="66" y="176" width="270" height="180" rx="8" fill="#3b2016"/>
+      <rect x="76" y="186" width="250" height="160" rx="4" fill="url(#glass)"/>
+      <path d="M90 190 L150 190 L96 340 L84 340 Z" fill="#fff" opacity=".35"/>
+      <!-- shelves with loaves -->
+      <rect x="76" y="262" width="250" height="6" fill="#8a5a3b"/>
+      <rect x="76" y="336" width="250" height="6" fill="#8a5a3b"/>
+      <use href="#bread" x="88"  y="220" width="72" height="42"/>
+      <use href="#bread" x="166" y="220" width="72" height="42"/>
+      <use href="#bread" x="244" y="220" width="72" height="42"/>
+      <use href="#bread" x="110" y="294" width="72" height="42"/>
+      <use href="#bread" x="200" y="294" width="72" height="42"/>
+      <!-- steam -->
+      <path class="steam" d="M126 212 q-8 -10 0 -20 q8 -10 0 -20" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path class="steam" d="M282 212 q-8 -10 0 -20 q8 -10 0 -20" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <!-- door -->
+      <rect x="360" y="176" width="96" height="210" rx="6" fill="#3b2016"/>
+      <rect x="372" y="190" width="72" height="90" rx="4" fill="url(#glass)"/>
+      <circle cx="440" cy="300" r="5" fill="#f0a94a"/>
+      <rect x="378" y="214" width="60" height="26" rx="4" fill="#fff"/>
+      <text x="408" y="232" text-anchor="middle" font-family="Nunito Sans, sans-serif" font-weight="700" font-size="14" fill="#3b2016">OPEN</text>
+    </svg>
+  </div>
+</section>
+
+<!-- ===== ABOUT: build trust. Who runs it, what makes it special. ===== -->
+<section id="about" class="about band">
+  <div class="wrap">
+    <div>
+      <h2>A small shop with big ovens</h2>
+      <p>Rise &amp; Crumb is a family-run bakery. We start the ovens at 4 a.m. so the bread is still warm when we open the doors.</p>
+      <p>Everything is made from scratch in our kitchen behind the counter, using flour from a mill two hours away.</p>
+      <p class="note">Sample text for a made-up business. On a real site, use the owner's own story and photos.</p>
+    </div>
+    <div class="facts">
+      <div class="fact"><b>Baked daily</b>Nothing on the shelf is older than this morning.</div>
+      <div class="fact"><b>Custom cakes</b>Birthdays, graduations and weddings, ordered 3 days ahead.</div>
+      <div class="fact"><b>Local pickup</b>Call ahead and we'll have your order boxed and ready.</div>
+    </div>
+    <!-- Tip: a "Reviews" section helps a lot, but only ever use REAL reviews
+         from real customers (with permission). Never make them up. -->
+  </div>
+</section>
+
+<!-- ===== MENU: the content is filled in by JavaScript below.
+     Keeping the menu as data (a list) makes it easy for you to update prices. ===== -->
+<section id="menu" class="menu band">
+  <div class="wrap">
+    <h2>Today's menu</h2>
+    <div class="tabs" role="tablist" aria-label="Menu categories" id="tabs"></div>
+    <ul class="items" id="items"></ul>
+    <p class="note" style="margin-top:18px">Sample items and prices.</p>
+  </div>
+</section>
+
+<!-- ===== HOURS & LOCATION: the #1 thing people look up on their phone. ===== -->
+<section id="visit" class="visit band">
+  <div class="wrap">
+    <div>
+      <h2>Hours &amp; location</h2>
+      <span class="status" id="status">Checking hours…</span>
+      <table aria-label="Opening hours"><tbody id="hours"></tbody></table>
+    </div>
+    <div class="mapbox">
+      <!-- A simple drawn map. On a real site, embed a Google Map of the address. -->
+      <svg viewBox="0 0 400 220" role="img" aria-label="Map showing the bakery at Main Street and Oak Avenue">
+        <rect width="400" height="220" fill="#e9f0e4"/>
+        <rect x="0" y="96" width="400" height="30" fill="#fff"/>
+        <rect x="236" y="0" width="30" height="220" fill="#fff"/>
+        <text x="16" y="116" font-family="Nunito Sans,sans-serif" font-size="13" font-weight="700" fill="#6e5249">Main St</text>
+        <text x="274" y="24" font-family="Nunito Sans,sans-serif" font-size="13" font-weight="700" fill="#6e5249">Oak Ave</text>
+        <circle cx="200" cy="80" r="12" fill="#e7768a" stroke="#3b2016" stroke-width="3"/>
+        <text x="200" y="58" text-anchor="middle" font-family="Fraunces,serif" font-size="15" font-weight="800" fill="#3b2016">Rise &amp; Crumb</text>
+      </svg>
+      <p style="margin:14px 0 4px"><b>123 Main Street</b>, at the corner of Oak Avenue</p>
+      <p style="margin:0">Call us: <b>(555) 010-0142</b></p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT: give customers an easy way to reach the business. ===== -->
+<section id="contact" class="contact band">
+  <div class="wrap">
+    <h2>Order a custom cake</h2>
+    <p>Tell us what you're celebrating and we'll get back to you within a day.</p>
+    <!-- On a real site, this form would send to the owner's email using a form service.
+         Here, JavaScript just shows a thank-you message. -->
+    <form id="cakeForm" novalidate>
+      <label>Your name <input id="name" name="name" required autocomplete="name"></label>
+      <label>Phone or email <input id="reach" name="reach" required></label>
+      <label>Cake size
+        <select id="size" name="size">
+          <option>6-inch (serves 8)</option>
+          <option>8-inch (serves 14)</option>
+          <option>Sheet cake (serves 30)</option>
+        </select>
+      </label>
+      <label>Date needed <input id="date" name="date" type="date" required></label>
+      <label>Details <textarea id="details" name="details" placeholder="Flavor, colors, message on top…"></textarea></label>
+      <p id="err" class="note" role="alert"></p>
+      <button class="btn" type="submit">Send request</button>
+    </form>
+    <div class="thanks" id="thanks" role="status"></div>
+  </div>
+</section>
+</main>
+
+<footer>
+  Rise &amp; Crumb Bakery · 123 Main Street · (555) 010-0142<br>
+  A practice website for a made-up business.
+</footer>
+
+<script>
+{ // Curly braces keep our variables from clashing with anything else on the page.
+
+  // ---------- MENU DATA ----------
+  // To change the menu, just edit this list. No HTML needed!
+  const menu = {
+    "Breads": [
+      ["Country sourdough", "Crackly crust, chewy inside", "$8"],
+      ["Honey wheat loaf", "Soft sandwich bread", "$6"],
+      ["Rosemary focaccia", "Olive oil, sea salt", "$7"],
+      ["French baguette", "Baked fresh at 7 a.m. and noon", "$4"]
+    ],
+    "Pastries": [
+      ["Cinnamon roll", "Cream cheese frosting", "$4.50"],
+      ["Butter croissant", "Three days to make", "$3.75"],
+      ["Blueberry muffin", "Crumb topping", "$3.25"],
+      ["Chocolate chip cookie", "Brown butter, sea salt", "$2.50"]
+    ],
+    "Cakes": [
+      ["6-inch celebration cake", "Serves 8, any flavor", "$38"],
+      ["8-inch celebration cake", "Serves 14, any flavor", "$54"],
+      ["Sheet cake", "Serves 30", "$85"],
+      ["Cake slice", "Ask what's in the case today", "$5"]
+    ],
+    "Drinks": [
+      ["Drip coffee", "Free refills", "$2.50"],
+      ["Latte", "Hot or iced", "$4.75"],
+      ["Hot chocolate", "Topped with whipped cream", "$3.50"]
+    ]
+  };
+
+  const tabs = document.getElementById("tabs");
+  const items = document.getElementById("items");
+
+  // Build one button per category.
+  tabs.innerHTML = Object.keys(menu).map((cat, i) =>
+    `<button role="tab" aria-selected="${i === 0}" data-cat="${cat}">${cat}</button>`
+  ).join("");
+
+  // Show the items for one category.
+  function showCategory(cat){
+    items.innerHTML = menu[cat].map(([name, desc, price]) =>
+      `<li><span><span class="name">${name}</span><span class="desc">${desc}</span></span><span class="price">${price}</span></li>`
+    ).join("");
+    for (const b of tabs.children) b.setAttribute("aria-selected", b.dataset.cat === cat);
+  }
+
+  // When a tab is clicked, switch categories.
+  tabs.addEventListener("click", e => {
+    const b = e.target.closest("button");
+    if (b) showCategory(b.dataset.cat);
+  });
+  showCategory("Breads");
+
+  // ---------- HOURS ----------
+  // [day name, open hour, close hour] in 24-hour time. null = closed.
+  const hours = [
+    ["Sunday", 8, 13], ["Monday", null, null], ["Tuesday", 7, 17],
+    ["Wednesday", 7, 17], ["Thursday", 7, 17], ["Friday", 7, 18], ["Saturday", 7, 15]
+  ];
+  // Turn 13 into "1 p.m."
+  const fmt = h => `${h % 12 || 12} ${h < 12 ? "a.m." : "p.m."}`;
+  const now = new Date();
+  const today = now.getDay(); // 0 = Sunday
+
+  document.getElementById("hours").innerHTML = hours.map(([day, open, close], i) =>
+    `<tr class="${i === today ? "today" : ""}"><td>${day}${i === today ? " (today)" : ""}</td><td>${open === null ? "Closed" : fmt(open) + " – " + fmt(close)}</td></tr>`
+  ).join("");
+
+  // Show "Open now" or "Closed now" using the visitor's clock.
+  const [, o, c] = hours[today];
+  const h = now.getHours() + now.getMinutes() / 60;
+  document.getElementById("status").textContent =
+    (o !== null && h >= o && h < c) ? `Open now until ${fmt(c)}` : "Closed right now";
+
+  // ---------- CONTACT FORM ----------
+  const form = document.getElementById("cakeForm");
+  form.addEventListener("submit", e => {
+    e.preventDefault(); // Stop the page from reloading.
+    const name = document.getElementById("name").value.trim();
+    const reach = document.getElementById("reach").value.trim();
+    const date = document.getElementById("date").value;
+    const err = document.getElementById("err");
+    if (!name || !reach || !date){
+      err.textContent = "Please fill in your name, how to reach you, and the date.";
+      return;
+    }
+    err.textContent = "";
+    form.style.display = "none";
+    const thanks = document.getElementById("thanks");
+    // textContent (not innerHTML) is safer for anything a visitor typed.
+    thanks.textContent = `Thanks, ${name}! This is a practice site, so nothing was actually sent. On a real site, the bakery would get your request and contact you at ${reach}.`;
+    thanks.classList.add("show");
+  });
+}
+</script>
+</body>
+</html>
